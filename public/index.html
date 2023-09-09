@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Express Website</title>
+    <!-- import the index.css file -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <form id="login-form" action="" method="POST">
+        <input id="login-username" type="text" name="username" placeholder="Enter your username here">
+        <input id="login-password" type="text" name="password" maxlength="4" placeholder="Enter your 4 digit pin here">
+        <input type="submit" value="Login" id="login-button">
+        <input type="submit" value="Signup" id="signup-button">
+    </form>
+
+    <h1>Messages:</h1>
+    
+    <div id="message"></div>
+    <!-- add a form for sending messages connect to the sendMessage function in script.js -->
+    <form action="/send-message" method="POST">
+        <input type="text" name="message" placeholder="Enter your message here">
+        <input type="hidden" name="username" id="username" value=""> <!-- Add a hidden input field for the username -->
+        <input type="submit" value="Send">
+    </form>
+
+   
+    
+    <script src="/script.js"></script>
+</body>
+</html>
+
