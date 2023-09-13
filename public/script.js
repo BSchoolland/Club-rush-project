@@ -37,6 +37,25 @@ var points = [
 // start a timer
 var startTime = new Date().getTime();
 
+// wait for 5 seconds
+setTimeout(function() {
+    // count down from 3
+    document.getElementById('pre-game-info').innerHTML = '3';
+    setTimeout(function() {
+        document.getElementById('pre-game-info').innerHTML = '2';
+        setTimeout(function() {
+            document.getElementById('pre-game-info').innerHTML = '1';
+            setTimeout(function() {
+                document.getElementById('pre-game-info').innerHTML = 'GO!';
+                setTimeout(function() {
+                    document.getElementById('pre-game-info').style.display = 'none';
+                    document.getElementById('find-the-bug').style.display = 'block';
+                }, 1000);
+            }, 1000);
+        }, 1000);
+    }, 1000);
+}, 5000);
+
 const image = document.getElementById('find-the-bug');
 
         // Add a click event listener to the image
@@ -73,7 +92,6 @@ const image = document.getElementById('find-the-bug');
                     // show the victory message
                     document.getElementById('victory-text').innerHTML = `You found all the bugs in ${seconds} seconds!`;
                     document.getElementById('victory-text').style.display = 'block';
-
                 }
                 else{
                     success.currentTime = 0;
