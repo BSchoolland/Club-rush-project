@@ -17,6 +17,8 @@ const Game = () => {
   const [victoryText, setVictoryText] = useState("");
   const startTimeRef = useRef(new Date().getTime());
   const imageRef = useRef(null);
+  const successAudioRef = useRef(new Audio("/success.mp3"));
+  const victoryAudioRef = useRef(new Audio("/victory.mp3"));
 
   useEffect(() => {
     if (preGameCountdown > 0) {
@@ -26,39 +28,49 @@ const Game = () => {
 
   useEffect(() => {
     const handleClick = (event) => {
-      const image = imageRef.current;
-      const rect = image.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      try {
+        const rect = image.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
 
-      const imageWidth = image.clientWidth;
-      const imageHeight = image.clientHeight;
+        const imageWidth = image.clientWidth;
+        const imageHeight = image.clientHeight;
 
-      const percentageX = (x / imageWidth) * 100;
-      const percentageY = (y / imageHeight) * 100;
+        const percentageX = (x / imageWidth) * 100;
+        const percentageY = (y / imageHeight) * 100;
 
-      const closestPoint = findClosestPoint(percentageX, percentageY, points);
-      if (closestPoint && closestPoint.distance < 10) {
-        // Adjust distance sensitivity as needed
-        const newPoints = points.filter((p) => p !== closestPoint.point);
-        setPoints(newPoints);
+        const closestPoint = findClosestPoint(percentageX, percentageY, points);
+        if (closestPoint && closestPoint.distance < 10) {
+          // play success sound
+          successAudioRef.current.play();
 
-        if (newPoints.length === 0) {
-          const timeElapsed =
-            (new Date().getTime() - startTimeRef.current) / 1000;
-          setVictoryText(
-            `You found all the bugs in ${timeElapsed.toFixed(2)} seconds!`,
-          );
+          // Adjust distance sensitivity as needed
+          const newPoints = points.filter((p) => p !== closestPoint.point);
+          console.log("Points left: ", newPoints.length);
+          setPoints(newPoints);
+
+          if (newPoints.length === 0) {
+            // All bugs found, play victory sound
+            victoryAudioRef.current.play();
+            const timeElapsed =
+              (new Date().getTime() - startTimeRef.current) / 1000;
+            setVictoryText(
+              `You found all the bugs in ${timeElapsed.toFixed(2)} seconds!`,
+            );
+          }
         }
+      } catch (error) {
+        console.log("Error handling click: ", error);
       }
     };
 
     const image = imageRef.current;
-    image.addEventListener("click", handleClick);
-
-    return () => {
-      image.removeEventListener("click", handleClick);
-    };
+    if (image) {
+      image.addEventListener("click", handleClick);
+      return () => {
+        image.removeEventListener("click", handleClick);
+      };
+    }
   }, [points]);
 
   const findClosestPoint = (x, y, points) => {
@@ -85,25 +97,25 @@ const Game = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center h-screen">
       {preGameCountdown > 0 ? (
-        <div id="pre-game-info">
+        <div id="pre-game-info" className="text-center text-2xl font-bold">
           {preGameCountdown > 1 ? preGameCountdown - 1 : "GO!"}
         </div>
+      ) : victoryText ? (
+        <div id="victory-text" className="text-5xl font-bold"></div>
       ) : (
-        <img
-          ref={imageRef}
-          id="find-the-bug"
-          src="/public/findthebug.jpg" // Update path to your image
-          alt="Find the Bug Game"
-          style={{
-            width: "100%",
-            height: "auto",
-            display: victoryText ? "none" : "block",
-          }}
-        />
+        <div className="relative max-w-full h-auto">
+          <img
+            ref={imageRef}
+            id="find-the-bug"
+            src="/findthebug.jpg"
+            alt="Find the Bug Game"
+            className="w-full h-auto"
+            style={{ display: victoryText ? "none" : "block" }}
+          />
+        </div>
       )}
-      {victoryText && <div id="victory-text">{victoryText}</div>}
     </div>
   );
 };

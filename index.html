@@ -3,26 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Club Rush</title>
-    <link rel="stylesheet" href="index.css" />
+    <title>React App</title>
   </head>
-
   <body>
-    <main>
-      <h1 id="pre-game-info">
-        Find and click on all the bugs as quickly as you can!
-      </h1>
-      <img class="find-the-bug" id="find-the-bug" src="findthebug.jpg" /><img />
-      <h1 class="victory-text" id="victory-text"></h1>
-    </main>
-    <!-- audio files -->
-    <audio id="success" controls>
-      <source src="success.mp3" type="audio/mpeg" />
-    </audio>
-    <audio id="victory" controls>
-      <source src="victory.mp3" type="audio/mpeg" />
-    </audio>
-
-    <script src="script.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
+    <script src="./node_modules/preline/dist/preline.js"></script>
   </body>
 </html>
