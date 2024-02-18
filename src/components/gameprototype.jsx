@@ -11,6 +11,7 @@ const initialPoints = [
   { name: "Bug 7", x: 96, y: 31 },
 ];
 
+
 const GamePrototype = () => {
   const [points, setPoints] = useState(initialPoints);
   const [preGameCountdown, setPreGameCountdown] = useState(5);
@@ -26,8 +27,11 @@ const GamePrototype = () => {
     }
   }, [preGameCountdown]);
 
+
   useEffect(() => {
+    console.log("before event called");
     const handleClick = (event) => {
+      console.log("Event started");
       const rect = image.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
@@ -59,6 +63,7 @@ const GamePrototype = () => {
     const image = imageRef.current;
     if (!image) return;
     image.addEventListener("click", handleClick);
+    console.log("event added");
     return () => image.removeEventListener("click", handleClick);
   }, [points]);
 

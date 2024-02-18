@@ -19,13 +19,16 @@ const Game = () => {
   const imageRef = useRef(null);
   const successAudioRef = useRef(new Audio("/success.mp3"));
   const victoryAudioRef = useRef(new Audio("/victory.mp3"));
+  var image = null;
 
+  // Countdown Effect
   useEffect(() => {
     if (preGameCountdown > 0) {
       setTimeout(() => setPreGameCountdown(preGameCountdown - 1), 1000);
     }
   }, [preGameCountdown]);
 
+  
   useEffect(() => {
     const handleClick = (event) => {
       try {
@@ -64,13 +67,17 @@ const Game = () => {
       }
     };
 
-    const image = imageRef.current;
+
+    //Image gets registered along with evenListener
+    setTimeout(() => {
+    image = imageRef.current;
     if (image) {
       image.addEventListener("click", handleClick);
       return () => {
         image.removeEventListener("click", handleClick);
       };
     }
+  }, 7000);
   }, [points]);
 
   const findClosestPoint = (x, y, points) => {
