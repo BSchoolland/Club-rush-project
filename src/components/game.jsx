@@ -30,10 +30,7 @@ const Game = () => {
 
   
   useEffect(() => {
-    console.log("Entered main useEffect")
     const handleClick = (event) => {
-      console.log("Click registered");
-      console.log(image);
       try {
         const rect = image.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -70,23 +67,17 @@ const Game = () => {
       }
     };
 
-    //Hot reload comment spot
-    console.log("dfs");
 
     //Image gets registered along with evenListener
     setTimeout(() => {
     image = imageRef.current;
     if (image) {
-      console.log("added handClick");
       image.addEventListener("click", handleClick);
       return () => {
-        console.log("Removed handle click");
         image.removeEventListener("click", handleClick);
       };
-    } else {
-      console.log("image is null");
     }
-  }, 8000);
+  }, 7000);
   }, [points]);
 
   const findClosestPoint = (x, y, points) => {
