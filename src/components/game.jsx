@@ -19,15 +19,21 @@ const Game = () => {
   const imageRef = useRef(null);
   const successAudioRef = useRef(new Audio("/success.mp3"));
   const victoryAudioRef = useRef(new Audio("/victory.mp3"));
+  var image = null;
 
+  // Countdown Effect
   useEffect(() => {
     if (preGameCountdown > 0) {
       setTimeout(() => setPreGameCountdown(preGameCountdown - 1), 1000);
     }
   }, [preGameCountdown]);
 
+  
   useEffect(() => {
+    console.log("Entered main useEffect")
     const handleClick = (event) => {
+      console.log("Click registered");
+      console.log(image);
       try {
         const rect = image.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -64,13 +70,23 @@ const Game = () => {
       }
     };
 
-    const image = imageRef.current;
+    //Hot reload comment spot
+    console.log("dfs");
+
+    //Image gets registered along with evenListener
+    setTimeout(() => {
+    image = imageRef.current;
     if (image) {
+      console.log("added handClick");
       image.addEventListener("click", handleClick);
       return () => {
+        console.log("Removed handle click");
         image.removeEventListener("click", handleClick);
       };
+    } else {
+      console.log("image is null");
     }
+  }, 8000);
   }, [points]);
 
   const findClosestPoint = (x, y, points) => {
