@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Initial points configuration
 const initialPoints = [
@@ -10,7 +10,6 @@ const initialPoints = [
   { name: "Bug 6", x: 37, y: 99 },
   { name: "Bug 7", x: 96, y: 31 },
 ];
-
 
 const GamePrototype = () => {
   const [points, setPoints] = useState(initialPoints);
@@ -26,7 +25,6 @@ const GamePrototype = () => {
       setTimeout(() => setPreGameCountdown(preGameCountdown - 1), 1000);
     }
   }, [preGameCountdown]);
-
 
   useEffect(() => {
     console.log("before event called");
