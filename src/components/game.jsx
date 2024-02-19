@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 // Initial points configuration
 const initialPoints = [
@@ -28,47 +28,58 @@ const Game = () => {
     }
   }, [preGameCountdown]);
 
-  const handleClick = useCallback((event) => {
-    try {
-      image = imageRef.current;
-      const rect = image.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+  const handleClick = useCallback(
+    (event) => {
+      try {
+        image = imageRef.current;
+        const rect = image.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
 
-      const imageWidth = image.clientWidth;
-      const imageHeight = image.clientHeight;
+        const imageWidth = image.clientWidth;
+        const imageHeight = image.clientHeight;
 
-      const percentageX = (x / imageWidth) * 100;
-      const percentageY = (y / imageHeight) * 100;
+        const percentageX = (x / imageWidth) * 100;
+        const percentageY = (y / imageHeight) * 100;
 
-      const closestPoint = findClosestPoint(percentageX, percentageY, points);
-      if (closestPoint && closestPoint.distance < 10) {
-        // play success sound
-        if (successAudioRef.current) {
-          successAudioRef.current.currentTime = 0;
-          successAudioRef.current.play();
+        const closestPoint = findClosestPoint(percentageX, percentageY, points);
+        if (closestPoint && closestPoint.distance < 10) {
+          // play success sound
+          if (successAudioRef.current) {
+            successAudioRef.current.currentTime = 0;
+            successAudioRef.current.play();
+          }
+
+          // Adjust distance sensitivity as needed
+          const newPoints = points.filter((p) => p !== closestPoint.point);
+          console.log("Points left: ", newPoints.length);
+          setPoints(newPoints);
+          image.removeEventListener("click", handleClick);
+          if (newPoints.length === 0) {
+            // All bugs found, play victory sound
+            victoryAudioRef.current.play();
+            const timeElapsed =
+              (new Date().getTime() - startTimeRef.current) / 1000;
+            setVictoryText(
+              `You found all the bugs in ${timeElapsed.toFixed(2)} seconds!`,
+            );
+          }
         }
-
-        // Adjust distance sensitivity as needed
-        const newPoints = points.filter((p) => p !== closestPoint.point);
-        console.log("Points left: ", newPoints.length);
-        setPoints(newPoints);
-        image.removeEventListener("click", handleClick);
-        if (newPoints.length === 0) {
-          // All bugs found, play victory sound
-          victoryAudioRef.current.play();
-          const timeElapsed =
-            (new Date().getTime() - startTimeRef.current) / 1000;
-          setVictoryText(
-            `You found all the bugs in ${timeElapsed.toFixed(2)} seconds!`,
-          );
-        }
+      } catch (error) {
+        console.log("Error handling click: ", error);
       }
-    } catch (error) {
-      console.log("Error handling click: ", error);
-    }
-    }, [points, setPoints, imageRef, successAudioRef, victoryAudioRef, startTimeRef, setVictoryText]); // Add dependencies here
-  
+    },
+    [
+      points,
+      setPoints,
+      imageRef,
+      successAudioRef,
+      victoryAudioRef,
+      startTimeRef,
+      setVictoryText,
+    ],
+  ); // Add dependencies here
+
   useEffect(() => {
     let intervalId = setInterval(() => {
       try {
