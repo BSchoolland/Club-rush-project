@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Initial points configuration
 const initialPoints = [
@@ -19,6 +20,7 @@ const Game = () => {
   const imageRef = useRef(null);
   const successAudioRef = useRef(new Audio("/success.mp3"));
   const victoryAudioRef = useRef(new Audio("/victory.mp3"));
+  const navigate = useNavigate();
   var image = null;
 
   // Countdown Effect
@@ -52,9 +54,11 @@ const Game = () => {
 
           // Adjust distance sensitivity as needed
           const newPoints = points.filter((p) => p !== closestPoint.point);
+
           console.log("Points left: ", newPoints.length);
           setPoints(newPoints);
           image.removeEventListener("click", handleClick);
+
           if (newPoints.length === 0) {
             // All bugs found, play victory sound
             victoryAudioRef.current.play();
@@ -63,6 +67,11 @@ const Game = () => {
             setVictoryText(
               `You found all the bugs in ${timeElapsed.toFixed(2)} seconds!`,
             );
+
+            // Navigate back to home after a delay
+            setTimeout(() => {
+              navigate("/");
+            }, 5000); // Adjust delay as needed
           }
         }
       } catch (error) {
