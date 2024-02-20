@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Initial points configuration
 const initialPoints = [
@@ -19,7 +20,10 @@ const Game = () => {
   const imageRef = useRef(null);
   const successAudioRef = useRef(new Audio("/success.mp3"));
   const victoryAudioRef = useRef(new Audio("/victory.mp3"));
+  const navigate = useNavigate();
+  var image = null;
 
+  // Countdown Effect
   useEffect(() => {
     if (preGameCountdown > 0) {
       setTimeout(() => setPreGameCountdown(preGameCountdown - 1), 1000);
@@ -27,11 +31,18 @@ const Game = () => {
     }
   }, [preGameCountdown]);
 
+<<<<<<< HEAD
   useEffect(() => {
     console.log("inside useEffect");
     const handleClick = (event) => {
       try {
         console.log("inside try statement:useEffect");
+=======
+  const handleClick = useCallback(
+    (event) => {
+      try {
+        image = imageRef.current;
+>>>>>>> origin/master
         const rect = image.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
@@ -45,12 +56,17 @@ const Game = () => {
         const closestPoint = findClosestPoint(percentageX, percentageY, points);
         if (closestPoint && closestPoint.distance < 10) {
           // play success sound
-          successAudioRef.current.play();
+          if (successAudioRef.current) {
+            successAudioRef.current.currentTime = 0;
+            successAudioRef.current.play();
+          }
 
           // Adjust distance sensitivity as needed
           const newPoints = points.filter((p) => p !== closestPoint.point);
+
           console.log("Points left: ", newPoints.length);
           setPoints(newPoints);
+          image.removeEventListener("click", handleClick);
 
           if (newPoints.length === 0) {
             // All bugs found, play victory sound
@@ -60,13 +76,29 @@ const Game = () => {
             setVictoryText(
               `You found all the bugs in ${timeElapsed.toFixed(2)} seconds!`,
             );
+
+            // Navigate back to home after a delay
+            setTimeout(() => {
+              navigate("/");
+            }, 5000); // Adjust delay as needed
           }
         }
       } catch (error) {
         console.log("Error handling click: ", error);
       }
-    };
+    },
+    [
+      points,
+      setPoints,
+      imageRef,
+      successAudioRef,
+      victoryAudioRef,
+      startTimeRef,
+      setVictoryText,
+    ],
+  ); // Add dependencies here
 
+<<<<<<< HEAD
     //Hot reload area:
     console.log("anyString");
     console.log("epic gamer");
@@ -80,6 +112,26 @@ const Game = () => {
       };
     }
   }, [points]);
+=======
+  useEffect(() => {
+    let intervalId = setInterval(() => {
+      try {
+        let image = imageRef.current;
+        if (image) {
+          image.addEventListener("click", handleClick);
+          // stop trying to add the event listener
+          clearInterval(intervalId);
+        }
+      } catch (error) {
+        console.log("Error adding event listener: ", error);
+      }
+    }, 50); // Try adding the event listener every 50ms
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [handleClick]); // Dependency array now includes handleClick
+>>>>>>> origin/master
 
   const findClosestPoint = (x, y, points) => {
     if (points.length === 0) {
@@ -111,7 +163,9 @@ const Game = () => {
           {preGameCountdown > 1 ? preGameCountdown - 1 : "GO!"}
         </div>
       ) : victoryText ? (
-        <div id="victory-text" className="text-5xl font-bold"></div>
+        <div id="victory-text" className="text-5xl font-bold">
+          {victoryText}
+        </div>
       ) : (
         <div className="relative max-w-full h-auto">
           <img

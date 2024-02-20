@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Initial points configuration
 const initialPoints = [
@@ -27,7 +27,9 @@ const GamePrototype = () => {
   }, [preGameCountdown]);
 
   useEffect(() => {
+    console.log("before event called");
     const handleClick = (event) => {
+      console.log("Event started");
       const rect = image.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
@@ -59,6 +61,7 @@ const GamePrototype = () => {
     const image = imageRef.current;
     if (!image) return;
     image.addEventListener("click", handleClick);
+    console.log("event added");
     return () => image.removeEventListener("click", handleClick);
   }, [points]);
 
