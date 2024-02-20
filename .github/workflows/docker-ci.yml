@@ -25,3 +25,9 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/club-rush-project:latest
+      - 
+        name: DigitalOcean App Platform deployment
+        uses: digitalocean/app_action@v1.1.5
+        with:
+        app_name: club-rush
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
