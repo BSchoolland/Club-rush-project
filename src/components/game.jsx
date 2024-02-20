@@ -23,12 +23,15 @@ const Game = () => {
   useEffect(() => {
     if (preGameCountdown > 0) {
       setTimeout(() => setPreGameCountdown(preGameCountdown - 1), 1000);
+      console.log(preGameCountdown);
     }
   }, [preGameCountdown]);
 
   useEffect(() => {
+    console.log("inside useEffect");
     const handleClick = (event) => {
       try {
+        console.log("inside try statement:useEffect");
         const rect = image.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
@@ -64,8 +67,13 @@ const Game = () => {
       }
     };
 
+    //Hot reload area:
+    console.log("anyString");
+    console.log("epic gamer");
+    console.log("nawr");
+
     const image = imageRef.current;
-    if (image) {
+    if (image) { // <-- issue right here, race condition ---------------------------------------------------------- set timeout? or remove countdown entirely
       image.addEventListener("click", handleClick);
       return () => {
         image.removeEventListener("click", handleClick);
